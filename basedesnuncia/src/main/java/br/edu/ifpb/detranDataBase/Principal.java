@@ -106,13 +106,16 @@ public class Principal {
 	                pstmt.setString(22, adt.getDelegacia());
 	                
 	                pstmt.executeUpdate();
-	             }*/
-	            
+	             }	            
 	             System.out.println("Dados Gson inseridos com sucesso no PostgreSQL!");
-	             
+	             */
+	            
+	            
 	            
 	             //------------------------------------------Consultas----------------------------------//
-	             int option;
+	             
+	            List<String> brs = null;
+	            int option;
 	     do {
 		         StringBuilder sbLogo = new StringBuilder();
 		         sbLogo.append("\033[31m"); 
@@ -141,9 +144,9 @@ public class Principal {
 		         
 		         switch (option) {
 				case 1:
-					Statement statement1 = conn.createStatement();
-					String sql = "SELECT * FROM acidentes";
-					ResultSet resultSet1 = statement1.executeQuery(sql);
+					Statement statement1 = conn.createStatement(); //invoca metodo de consulta
+					String sql = "SELECT * FROM acidentes"; 
+					ResultSet resultSet1 = statement1.executeQuery(sql); //retorna o resultado da consulta
 		             
 		            while (resultSet1.next()) {
 		            	    String id = resultSet1.getString("id");
@@ -216,7 +219,7 @@ public class Principal {
 					Statement statement5 = conn.createStatement();
 		             String consulta5 = "SELECT br FROM acidentes";
 		             ResultSet resultSet5 = statement5.executeQuery(consulta5);    
-		             List<String> brs = new ArrayList<>();
+		             brs = new ArrayList<>();
 		             
 		             while(resultSet5.next()) {
 		            	  String b = resultSet5.getString("br");
@@ -231,8 +234,17 @@ public class Principal {
 					
 				case 6:
 					
-					System.out.println("BR: ");
-		             String brEscolhido = leia.nextLine(); 
+					
+					if(brs != null) 
+						System.out.println("Listagem das BR'S: ");
+						for (String value : brs) {
+							
+							System.out.print(value + " - ");
+						}
+					
+					System.out.println("------");
+					System.out.println("Informe uma BR: ");
+		            String brEscolhido = leia.nextLine(); 
 		             
 		             Statement statement6 = conn.createStatement();
 		             String consulta6 = "SELECT causa_acidente, tipo_acidente FROM acidentes where br = " + "'"+ brEscolhido + "'";
