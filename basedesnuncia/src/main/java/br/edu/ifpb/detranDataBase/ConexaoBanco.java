@@ -1,4 +1,4 @@
-package br.edu.ifpb.violencia.mulher.ligue180.basedesnuncia;
+package br.edu.ifpb.detranDataBase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
