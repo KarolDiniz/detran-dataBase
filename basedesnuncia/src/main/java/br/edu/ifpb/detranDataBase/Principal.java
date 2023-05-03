@@ -6,117 +6,108 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 public class Principal {
 	
 	public static void main(String[] args) throws IOException {   
 		
 		Scanner leia = new Scanner(System.in);
+		Scanner leitor = new Scanner(System.in);
 		String csvFile = "C:\\Users\\carlo\\Downloads\\datatran2023.csv";
 		String line = "";
-	    String csvSplitBy = ";";
+	    String separador = ";";
 	    Connection conn = null;
+	    Acidentes[] acidentes;
 	    
-	        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+	        try {
 	        	
+	        	BufferedReader br = new BufferedReader(new FileReader(csvFile));
 	        	// ler a linha de cabeçalho
-	            /*String[] colunas = br.readLine().split(csvSplitBy);
-	            
-	            List<Acidentes> acidentes = new ArrayList<Acidentes>();
+	            String[] colunas = br.readLine().split(separador);         
+	            List<Acidentes> tragedias = new ArrayList<Acidentes>();
 
 	            while ((line = br.readLine()) != null) {
+	            	
+	                String[] dados = line.split(separador);
 	          
-	              String[] dados = line.split(csvSplitBy);
-	              
-	              for(String a: dados) {
-	            	  System.out.println(a);
-	              }
-	         
 	  			  // Cria um novo objeto Pessoa para cada linha e define os campos
-	              	Acidentes acidente = new Acidentes();
+	                Acidentes tragediaTransito = new Acidentes();
 	  		   	   
-	              	acidente.setId(dados[0]);
-	              	acidente.setData(dados[1]);
-	              	acidente.setDia_semana(dados[2]);
-	              	acidente.setHorario(dados[3]);
-	              	acidente.setCidade(dados[4]);
-	              	acidente.setBr(Integer.parseInt(dados[5]));
-	              	acidente.setKm(dados[6]);
-	              	acidente.setMunicipio(dados[7]);
-	              	acidente.setCausa_acidente(dados[8]);
-	              	acidente.setTipo_acidente(dados[9]);
-	              	acidente.setClassificacao_acidente(dados[10]);
-	              	acidente.setFase_dia(dados[11]);
-	              	acidente.setSentido_via(dados[12]);
-	              	acidente.setTipo_pista(dados[13]);
-	              	acidente.setTracado_via(dados[14]);
-	              	acidente.setPessoas(Integer.parseInt(dados[15]));
-	              	acidente.setMortos(Integer.parseInt(dados[16]));
-	              	acidente.setFeridos(Integer.parseInt(dados[17]));
-	              	acidente.setVeiculos(Integer.parseInt(dados[18]));
-	              	acidente.setLatitude(dados[19]);
-	              	acidente.setLongitude(dados[20]);
-	              	acidente.setDelegacia(dados[21]);
+	             	tragediaTransito.setData(dados[1]);
+	              	tragediaTransito.setCidade(dados[4]);
+	              	tragediaTransito.setBr(Integer.parseInt(dados[5]));
+	              	tragediaTransito.setMunicipio(dados[7]);
+	              	tragediaTransito.setCausa_acidente(dados[8]);
+	              	tragediaTransito.setTipo_acidente(dados[9]);
+	              	tragediaTransito.setFase_dia(dados[11]);
+	              	tragediaTransito.setPessoas(Integer.parseInt(dados[15]));
+	              	tragediaTransito.setMortos(Integer.parseInt(dados[16]));
+	              	tragediaTransito.setFeridos(Integer.parseInt(dados[17]));
+	              	tragediaTransito.setVeiculos(Integer.parseInt(dados[18]));
+	              	tragediaTransito.setLatitude(dados[19]);
+	              	tragediaTransito.setLongitude(dados[20]);
+	              	tragediaTransito.setDelegacia(dados[21]);
 	  		   	     
 	  			  // Adiciona o objeto Pessoa à lista
-	  			  acidentes.add(acidente);
+	  			  tragedias.add(tragediaTransito);
 	            }
 	      
 	        //  Transformar um objeto java em json    
 	            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	            String json = gson.toJson(acidentes);
-
+	            String json = gson.toJson(tragedias);
+	            
 	         // Converte o JSON em um array de objetos Acidentes
-	            Acidentes[] tragediasTransito = gson.fromJson(json, Acidentes[].class);*/
-	        
+	            acidentes = gson.fromJson(json, Acidentes[].class); 
+	            
 	         // Fazer a conexão com banco de dados
 	            conn = ConexaoBanco.getConnection();
-	          
-	           /* for (Acidentes adt : tragediasTransito) {
-	              
-	            	PreparedStatement pstmt = conn.prepareStatement("INSERT INTO acidentes (id,data,dia_semana,horario,cidade,br,km,municipio,causa_acidente,tipo_acidente,classificacao_acidente,fase_dia,sentido_via,tipo_pista,tracado_via,pessoas,mortos,feridos,veiculos,latitude,longitude,delegacia) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-	              
-	            	pstmt.setString(1, adt.getId());
-	                pstmt.setString(2, adt.getData());
-	                pstmt.setString(3, adt.getDia_semana());
-	                pstmt.setString(4, adt.getHorario());
-	                pstmt.setString(5, adt.getCidade());
-	                pstmt.setInt(6, adt.getBr());
-	                pstmt.setString(7, adt.getKm());
-	                pstmt.setString(8, adt.getMunicipio());
-	                pstmt.setString(9, adt.getCausa_acidente());
-	                pstmt.setString(10, adt.getTipo_acidente());
-	                pstmt.setString(11, adt.getClassificacao_acidente());
-	                pstmt.setString(12, adt.getFase_dia());
-	                pstmt.setString(13, adt.getSentido_via());
-	                pstmt.setString(14, adt.getTipo_pista());
-	                pstmt.setString(15, adt.getTracado_via());
-	                pstmt.setInt(16, adt.getPessoas());
-	                pstmt.setInt(17, adt.getMortos());
-	                pstmt.setInt(18, adt.getFeridos());
-	                pstmt.setInt(19, adt.getVeiculos());
-	                pstmt.setString(20, adt.getLatitude());
-	                pstmt.setString(21, adt.getLongitude());
-	                pstmt.setString(22, adt.getDelegacia());
+	         
+	            for (int i = 0; i < acidentes.length; i++) {
+	            
+	              	PreparedStatement pstmt = conn.prepareStatement("INSERT INTO acidentes (data,cidade,br,municipio,causa_acidente,tipo_acidente,fase_dia,pessoas,mortos,feridos,veiculos,latitude,longitude,delegacia) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)");
+	             
+	                pstmt.setString(1, acidentes[i].getData());
+	                pstmt.setString(2, acidentes[i].getCidade());
+	                pstmt.setInt(3, acidentes[i].getBr());
+	                pstmt.setString(4, acidentes[i].getMunicipio());
+	                pstmt.setString(5, acidentes[i].getCausa_acidente());
+	                pstmt.setString(6, acidentes[i].getTipo_acidente());
+	                pstmt.setString(7, acidentes[i].getFase_dia());
+	                pstmt.setInt(8, acidentes[i].getPessoas());
+	                pstmt.setInt(9, acidentes[i].getMortos());
+	                pstmt.setInt(10, acidentes[i].getFeridos());
+	                pstmt.setInt(11, acidentes[i].getVeiculos());
+	                pstmt.setString(12, acidentes[i].getLatitude());
+	                pstmt.setString(13, acidentes[i].getLongitude());
+	                pstmt.setString(14, acidentes[i].getDelegacia());
 	                
 	                pstmt.executeUpdate();
 	             }	            
 	             System.out.println("Dados Gson inseridos com sucesso no PostgreSQL!");
-	             */
-	            
 	            
 	            
 	             //------------------------------------------Consultas----------------------------------//
-	             
-	            List<String> brs = null;
+	            
 	            int option;
-	     do {
+	            int cont = 1;
+	            SimpleDateFormat formato;
+	            double somaMortos;
+				double somaFeridos;
+			    int quantidade;
+	            
+	          
+	        do {
+	    	 
 		         StringBuilder sbLogo = new StringBuilder();
 		         sbLogo.append("\033[31m"); 
 		         sbLogo.append("\n"+"------------ Central de acidentes: DETRAN ------------"+ "\n");
@@ -130,76 +121,68 @@ public class Principal {
 		         sb.append(" 3. Listar acidentes referente a um município específico" + "\n");
 		         sb.append(" 4. Exibir qual turno do dia há mais recorrência em acidentes" + "\n");
 		         sb.append(" 5. Exibir BR com mais registros de acidentes" + "\n");
-		         sb.append(" 6. Listar acidentes referente a uma BR específica" + "\n");
-		         sb.append(" 7. Sair" + "\n");
+		         sb.append(" 6. Exibir o acidente recorrente a uma BR específica" + "\n");
+		         sb.append(" 7. Exibir informações sobre os acidentes do mês de 2023" + "\n");
+		         sb.append(" 8. Sair" + "\n");
 		         
 		         System.out.println(sb);	      
 		         
 		         StringBuilder sbOption = new StringBuilder();
 		         sbOption.append("\033[34m");
+		        
 		         System.out.print(sbOption.append("Insira uma opção:"));
-		         
+		        
 		         Scanner leitorMenu = new Scanner(System.in);
 		         option = leitorMenu.nextInt();
-		         
+		
 		         switch (option) {
 				case 1:
-					Statement statement1 = conn.createStatement(); //invoca metodo de consulta
-					String sql = "SELECT * FROM acidentes"; 
-					ResultSet resultSet1 = statement1.executeQuery(sql); //retorna o resultado da consulta
-		             
-		            while (resultSet1.next()) {
-		            	    String id = resultSet1.getString("id");
-		            	    String data = resultSet1.getString("data");
-		            	    String semana = resultSet1.getString("dia_semana");
-		            	    System.out.println("ID: " + id + ", Data: " + data + ", Dia da Semana: " + semana);
-				            
-		            }	
-		            statement1.close();
-		            resultSet1.close();
+					
+		            for(Acidentes acidente: acidentes) {
+		            	System.out.println(cont + " - "+ acidente);
+		            	cont++;
+		            }
 //		            
 					break;
 				case 2:
-					Statement statement2 = conn.createStatement();
-					String consulta2 = "SELECT municipio FROM acidentes ";
-		            ResultSet resultSet2 = statement2.executeQuery(consulta2);
-		             
-		             List<String> municipios = new ArrayList<>();
-		                   
-			         while(resultSet2.next()) {
-		            	 String muni = resultSet2.getString("municipio");
-		            	 municipios.add(muni);
-		             }
-			          
-		             System.out.println( "Munícipio com mais registros de acidentes: " + retornaElementRepetido(municipios));
-			         statement2.close();
-			         resultSet2.close();
+	
+					 String municipioMaisRepetido = null;
+					 int maxRepeticoes = 0;
+
+					    for (int i = 0; i < acidentes.length; i++) {
+					        String municipioAtual = acidentes[i].getMunicipio();
+					        int repeticoes = 0;
+
+					        for (int j = 0; j < acidentes.length; j++) {
+					            if (acidentes[j].getMunicipio().equals(municipioAtual)) {
+					                repeticoes++;
+					            }
+					        }
+					        if (repeticoes > maxRepeticoes) {
+					            maxRepeticoes = repeticoes;
+					            municipioMaisRepetido = municipioAtual;
+					        }
+					    }
+				        System.out.println("O município mais repetido é " + municipioMaisRepetido);
 		             
 					break;
 				case 3:	
-			         Statement statement3 = conn.createStatement();
+			   
 					System.out.print("Municipio: ");
+					
 					String municipio = leia.nextLine();
-					String consulta3 = "SELECT data,pessoas,mortos,feridos,latitude,longitude FROM acidentes WHERE municipio = " + "'" + municipio + "'";
-		            ResultSet resultSet3 = statement3.executeQuery(consulta3);
-	                   
-			         while(resultSet3.next()) {
-		            	 	String data = resultSet3.getString("data");
-		            	    int pessoas = resultSet3.getInt("pessoas");
-		            	    int mortos = resultSet3.getInt("mortos");
-		            	    int feridos = resultSet3.getInt("feridos");
-		            	    String latitude = resultSet3.getString("latitude");
-		            	    String longitude = resultSet3.getString("longitude");	
-		            	    
-		            	    System.out.println("Data: " + data + ", Pessoas: " + pessoas + ", Mortos: " + mortos + ", Feridos: " + feridos + " ,latitude: " + latitude + " , longitude: " + longitude);	  
-		             } 
-		             statement3.close();
-		             resultSet3.close();
+		
+					for(Acidentes acidente: acidentes) {
+						
+						if(acidente.getMunicipio().equals(municipio)) {
+							System.out.println("Data: " + acidente.getData() + ", Pessoas: " + acidente.getPessoas() + ", Mortos: " + acidente.getMortos() + ", Feridos: " + acidente.getFeridos() + " ,latitude: " + acidente.getLatitude() + " , longitude: " + acidente.getLongitude() + " ,Delegacia " + acidente.getDelegacia());
+						}
+					}
 					
 					break;
 		
-				case 4:
-			         Statement statement4 = conn.createStatement();
+				case 4:	//realiza consulta não direta, adere o resultado invocando-a.
+			         Statement statement4 = conn.createStatement(); 
 		             String consulta_fase_dia = "SELECT fase_dia FROM acidentes ";
 		             ResultSet resultSetFasedia = statement4.executeQuery(consulta_fase_dia);
 		             
@@ -216,10 +199,11 @@ public class Principal {
 					break;
 					
 				case 5:
-					Statement statement5 = conn.createStatement();
+					
+					 Statement statement5 = conn.createStatement();
 		             String consulta5 = "SELECT br FROM acidentes";
 		             ResultSet resultSet5 = statement5.executeQuery(consulta5);    
-		             brs = new ArrayList<>();
+		             List<String> brs = new ArrayList<>();
 		             
 		             while(resultSet5.next()) {
 		            	  String b = resultSet5.getString("br");
@@ -234,44 +218,75 @@ public class Principal {
 					
 				case 6:
 					
-					
-					if(brs != null) 
-						System.out.println("Listagem das BR'S: ");
-						for (String value : brs) {
-							
-							System.out.print(value + " - ");
-						}
-					
-					System.out.println("------");
-					System.out.println("Informe uma BR: ");
-		            String brEscolhido = leia.nextLine(); 
+					 Statement statement7 = conn.createStatement();
+			         String consulta = "SELECT DISTINCT br FROM acidentes ";
+			         ResultSet resultSet7 = statement7.executeQuery(consulta);
+			         
+			         System.out.println("------------------Lista de BRs--------------------");
 		             
-		             Statement statement6 = conn.createStatement();
-		             String consulta6 = "SELECT causa_acidente, tipo_acidente FROM acidentes where br = " + "'"+ brEscolhido + "'";
-		             ResultSet resultSet6 = statement6.executeQuery(consulta6);
-		             
-		             List<String> causas = new ArrayList<>();
-		             List<String> tipos = new ArrayList<>();
-		             
-		             
-		             while(resultSet6.next()) {
-			            	
-		            	    String causa = resultSet6.getString("causa_acidente");
-		            	    String tipo = resultSet6.getString("tipo_acidente");
-		            	
-		            	    causas.add(causa);
-		            	    tipos.add(tipo);    
+			         while(resultSet7.next()) {
+		            	  System.out.print("[" + resultSet7.getString("br") + "]");
 		             }
-		             
-		             String causaRepetido = retornaElementRepetido(causas);
-		             String tipoRepetido = retornaElementRepetido(tipos);
-		             System.out.println("Causa Recorrente: " + causaRepetido);
-		             System.out.println("Tipo Recorrente: " +   tipoRepetido);
-		             statement6.close();
-		             resultSet6.close();
+			         
+					System.out.println("");
+					System.out.println("Informe uma BR: ");
+		    
+		             statement7.close();
+		             resultSet7.close();
+					 
+					int brEscolhido = Integer.parseInt(leia.nextLine()); 
+					
+					 List<String> causa = new ArrayList<>();
+					 List<String> tipo = new ArrayList<>();
+					 
+					 for(Acidentes acidente: acidentes) {
+						if(acidente.getBr() == brEscolhido) {
+							causa.add(acidente.getCausa_acidente());
+							tipo.add(acidente.getTipo_acidente());
+						}
+					}
+					  System.out.println("Causa Recorrente: " + retornaElementRepetido(causa));
+			          System.out.println("Tipo Recorrente: " +   retornaElementRepetido(tipo));
+					
+					break;
+			
+				case 7:
+					
+					somaMortos = 0;
+					somaFeridos = 0;
+				    quantidade = 1; 
+				    
+					formato = new SimpleDateFormat("dd/MM/yyyy");
+					
+					System.out.println("Escolha um mês: \n 1-[JANEIRO] \n 2-[FEVEREIRO] \n 3-[MARÇO] \n Numero do mês desejado: ");
+					int op = leitor.nextInt();
+			
+					List<String> delegacias = new ArrayList<>();
+				   
+					for(Acidentes acidente: acidentes) {
+				    	
+				    	 Date date = formato.parse(acidente.getData());
+				         Calendar calendario = Calendar.getInstance();
+				         calendario.setTime(date);
+				         int mes = calendario.get(Calendar.MONTH) + 1;
+				        
+				         if(mes == op) {
+				        	 somaMortos += acidente.getMortos();
+				        	 somaFeridos += acidente.getFeridos();
+				        	 quantidade++;
+				        	 delegacias.add(acidente.getDelegacia());
+				         }
+				     }
+					
+				     System.out.println("Delegacia que obteve mais ocorrência: " + retornaElementRepetido(delegacias));
+				     System.out.println("A quantidade de acidentes: " + quantidade);
+				     System.out.println("Média de Mortos: " + String.format("%.3f", somaMortos / quantidade));
+				     System.out.println("Média de Feridos: " + String.format("%.3f", somaFeridos / quantidade));
+				   
 					break;
 					
-				case 7:
+				case 8:
+				
 					System.out.println("Encerrado.");
 					break;
 					
@@ -279,7 +294,7 @@ public class Principal {
 					System.out.println("Ocorreu um erro. Insira uma opção válida.");
 					break;
 				}
-	     } while (option != 7);
+	     } while (option != 8);
 
 		             ConexaoBanco.closeConnection();
 
@@ -309,6 +324,5 @@ public class Principal {
 		return elementoRepetido;
 		
 	}
-}
-	    
 
+}

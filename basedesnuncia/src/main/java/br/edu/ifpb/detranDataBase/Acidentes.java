@@ -4,21 +4,13 @@ import java.util.Date;
 
 public class Acidentes {
 	
-	private String id;
 	private String data;
-	private String dia_semana;
-	private String horario;
 	private String cidade;
 	private int br;
-	private String km;
 	private String municipio;
 	private String causa_acidente;
 	private String tipo_acidente;
-	private String classificacao_acidente;
 	private String fase_dia;
-	private String sentido_via;
-	private String tipo_pista;
-	private String tracado_via;
 	private int pessoas;
 	private int mortos;
 	private int feridos;
@@ -27,29 +19,14 @@ public class Acidentes {
 	private String longitude;
 	private String delegacia;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
+	public String toString() {
+		return "Data: " + data + " ,BR: " + br + " ,Muniícipio: " + municipio +  " ,Pessoas: " + pessoas + " ,Veículos: " + veiculos + " ,Fase: " + fase_dia +" ,Latitude: " + latitude + " ,Longitude: " + longitude + " ,Delegacia: " + delegacia + " [Causa: " + causa_acidente + "]" + "[Tipo: " + tipo_acidente+ "]";
 	}
 	public String getData() {
 		return data;
 	}
 	public void setData(String data) {
 		this.data = data;
-	}
-	public String getDia_semana() {
-		return dia_semana;
-	}
-	public void setDia_semana(String dia_semana) {
-		this.dia_semana = dia_semana;
-	}
-	public String getHorario() {
-		return horario;
-	}
-	public void setHorario(String dados) {
-		this.horario = dados;
 	}
 	public String getCidade() {
 		return cidade;
@@ -63,12 +40,7 @@ public class Acidentes {
 	public void setBr(int br) {
 		this.br = br;
 	}
-	public String getKm() {
-		return km;
-	}
-	public void setKm(String km) {
-		this.km = km;
-	}
+
 	public String getMunicipio() {
 		return municipio;
 	}
@@ -87,35 +59,11 @@ public class Acidentes {
 	public void setTipo_acidente(String tipo_acidente) {
 		this.tipo_acidente = tipo_acidente;
 	}
-	public String getClassificacao_acidente() {
-		return classificacao_acidente;
-	}
-	public void setClassificacao_acidente(String classificacao_acidente) {
-		this.classificacao_acidente = classificacao_acidente;
-	}
 	public String getFase_dia() {
 		return fase_dia;
 	}
 	public void setFase_dia(String fase_dia) {
 		this.fase_dia = fase_dia;
-	}
-	public String getSentido_via() {
-		return sentido_via;
-	}
-	public void setSentido_via(String sentido_via) {
-		this.sentido_via = sentido_via;
-	}
-	public String getTipo_pista() {
-		return tipo_pista;
-	}
-	public void setTipo_pista(String tipo_pista) {
-		this.tipo_pista = tipo_pista;
-	}
-	public String getTracado_via() {
-		return tracado_via;
-	}
-	public void setTracado_via(String tracado_via) {
-		this.tracado_via = tracado_via;
 	}
 	public int getPessoas() {
 		return pessoas;
